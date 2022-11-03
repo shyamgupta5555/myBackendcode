@@ -7,12 +7,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzotr.mongodb.net/Pritesh8769811-DB?retryWrites=true&w=majority", {
-    useNewUrlParser: true
-})
-.then( () => console.log("MongoDb is connected"))
-.catch ( err => console.log(err) )
+mongoose.connect("mongodb+srv://shyamgupta:.T!8NRrzf6FyMYc@cluster0.dbdyccj.mongodb.net/middleware-db?retryWrites=true&w=majority"
+, {
+   useNewUrlParser: true 
+}
+).then( () => {console.log( "MongoDb is connected")}  )
+.catch( err => console.log(err))
 
 // Move around the following block and see how its order impacts what gets called first
 app.use (

@@ -1,4 +1,41 @@
 
+
+
+const middleware = function(req ,res ,next){
+     isFreeAppUser = req.headers["isfreeappuser"] 
+//   console.log(isFreeAppUser)
+    if(! isFreeAppUser ) {
+ return    res.send({msg : "this is not present isfreeappuser key"})    
+    } 
+     next()
+    
+}
+
+
+
+
+
+// const middlewarValidtaion =function(req,rees,next){
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports.middleware =middleware
+
+
+
+
+
+
+
 const mid1= function ( req, res, next) {
     req.falana= "hi there. i am adding something new to the req object"
     console.log("Hi I am a middleware named Mid1")
