@@ -7,14 +7,18 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+mongoose.connect("mongodb+srv://shyamgupta:.T!8NRrzf6FyMYc@cluster0.dbdyccj.mongodb.net/middlewareauth1-db?retryWrites=true&w=majority"
+, {
+   useNewUrlParser: true 
+}
 
-mongoose.connect("mongodb+srv://users-open-to-all:hiPassword123@cluster0.uh35t.mongodb.net/skDB?retryWrites=true&w=majority", {
-    useNewUrlParser: true
-})
-.then( () => console.log("MongoDb is connected"))
-.catch ( err => console.log(err) )
+).then( () => {console.log( "MongoDb is connected")}  )
+.catch( err => console.log(err))
+
 
 app.use('/', route)
+
+
 
 
 app.listen(process.env.PORT || 3000, function () {
