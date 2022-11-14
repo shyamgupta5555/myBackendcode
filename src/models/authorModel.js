@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 
-
 const authorModel = new mongoose.Schema({
     fname: {
         type: String,
@@ -18,7 +17,7 @@ const authorModel = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
-        required: true
+        required: true,
     },
     password: {
         type: String,

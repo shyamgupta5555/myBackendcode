@@ -138,3 +138,20 @@ Refer below sample
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 
 #### Note: Create a group database and use the same database in connection string by replacing `groupXDatabase
+
+
+
+
+<!-- 
+const isValidString = function (value) {
+  if (typeof value === "undefined" || value === null) return false;
+  if (typeof value === "string" && value.trim().length === 0) return false;
+  return true;
+}; -->
+
+<!-- 
+const isValidPassword = function (pw) {
+  let pass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/;
+  if (pass.test(pw)) return true;
+}; -->
+
