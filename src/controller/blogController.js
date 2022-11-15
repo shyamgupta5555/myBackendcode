@@ -51,6 +51,27 @@ const getData =async function (req,res){
     }
 
 }
+const DELETEdata =async function (req,res){
+    try {
+        let data=req.params.blogId
+        if(!idCharacterValid(data))   return res.status(400).send({status:false,msg:"Please provide the valid blogid"})  
+        let savedata = await blogModel.findById(data)
+        
+        if (!savedata)  return res.status(404).send({ status: false, msg: "blogs not found" })
+        
+      
+        if (savedata.isDeleted==true) return res.status(404).send({status:true , msg:"this data is alredy deleted"})
+            let savedata2=await blogModel.findByIdAndUpdate(data,{$set:{isDeleted:true,deletedAt:new Date(Date.now())}},{new:true})
+            res.status(200).send()
+        
+
+        
+    } catch (err) {console.log(err.message)
+        return res.status(500).send({ status: false, error: err.message })
+        
+    }
+
+}
 
 const deleteunpublished =async function (req,res){
     try{
@@ -68,3 +89,4 @@ const deleteunpublished =async function (req,res){
 module.exports.getData=getData 
 module.exports.createBlog= createBlog 
 module.exports.deleteunpublished=deleteunpublished
+module.exports.DELETEdata= DELETEdata

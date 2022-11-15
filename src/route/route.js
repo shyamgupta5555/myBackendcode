@@ -10,6 +10,8 @@ router.post('/authors',authorController.createauther)
 
 router.get('/blogs',blogController.getData)
 
+router.delete( '/blogs/:blogId',blogController.DELETEdata)
+
 router.delete('/blogs',blogController.deleteunpublished)
 
 module.exports = router
