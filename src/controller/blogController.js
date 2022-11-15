@@ -30,8 +30,6 @@ const createBlog =async function (req,res){
 
 const getData =async function (req,res){
     try {
-        let data=req.query
-        const { authorId, category } = data
         
         if(Object.keys(req.query).length==0) { 
         let savedata = await blogModel.find({ isDeleted: false, isPublished: true })
@@ -42,7 +40,7 @@ const getData =async function (req,res){
         }}
 
         if(Object.keys(req.query).length>0){
-            let savedata2=await blogModel.find({$and:[{ isDeleted: false, isPublished: true } , {$or:[{authorId:authorId },{ category:category }]}]})
+            let savedata2=await blogModel.find({$and:[{ isDeleted: false, isPublished: true } , req.query]})
             if(savedata2.length==0)  return res.status(404).send({status:false,message:"this blog not found"})
 
             res.status(200).send({ status:true,msg:savedata2})
@@ -54,5 +52,19 @@ const getData =async function (req,res){
 
 }
 
+const deleteunpublished =async function (req,res){
+    try{
+            let datas = await blogModel.updateMany({$and:[{isDeleted:false},req.query]},{isDeleted:true,deletedAt:new Date(Date.now())},{new:true})
+            if(datas.modifiedCount==0)  return res.status(404).send({status:false,message:"Blogs not found with unpublished"})  
+
+            return res.status(200).send({status:true,data:datas})
+      
+    }catch (err) {
+        return res.status(500).send({ status: false, error: err.message })
+    }
+
+}
+
 module.exports.getData=getData 
 module.exports.createBlog= createBlog 
+module.exports.deleteunpublished=deleteunpublished
