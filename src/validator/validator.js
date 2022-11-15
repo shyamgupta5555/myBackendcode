@@ -1,5 +1,6 @@
+const mongoose = require('mongoose')
 
-const mongoose= require('mongoose')
+//=========================// isValidEmail //===================================
 
 const isValidEmail = function (value) {
   let emailRegex =
@@ -7,21 +8,27 @@ const isValidEmail = function (value) {
   if (emailRegex.test(value)) return true;
 };
 
+//============================// idCharacterValid //============================
+
 const idCharacterValid = function (value) {
-    return mongoose.Types.ObjectId.isValid(value);
+  return mongoose.Types.ObjectId.isValid(value);
 };
-  
+
+//==========================// isValidString //==================================
 
 const isValidString = function (value) {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length === 0) return false;
-    return true;
+  if (typeof value === "undefined" || value === null) return false;
+  if (typeof value === "string" && value.trim().length === 0) return false;
+  return true;
 };
-  
+
+//==============================// isValidPassword //================================
+
 const isValidPassword = function (pw) {
-    let pass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/;
-    if (pass.test(pw)) return true;
-  };
-  
-  
-module.exports={isValidEmail,idCharacterValid,isValidString,isValidPassword}
+  let pass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/;
+  if (pass.test(pw)) return true;
+};
+
+//=============================// module exports //==============================
+
+module.exports = { isValidEmail, idCharacterValid, isValidString, isValidPassword }

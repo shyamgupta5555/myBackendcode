@@ -4,15 +4,21 @@ const router = express.Router()
 const blogController = require("../controller/blogController")
 const authorController = require("../controller/authorController")
 
-router.post('/blogs',blogController.createBlog)
+//==============// PHASE -1 //===================================
 
-router.post('/authors',authorController.createauther)
+router.post('/blogs', blogController.createBlog)
 
-router.get('/blogs',blogController.getData)
+router.post('/authors', authorController.createauther)
 
-router.delete( '/blogs/:blogId',blogController.DELETEdata)
+router.get('/blogs', blogController.getData)
 
-router.delete('/blogs',blogController.deleteunpublished)
+router.put("/blogs/:blogId", blogController.updateBlog)
+
+router.delete('/blogs/:blogId', blogController.DELETEdata)
+
+router.delete('/blogs', blogController.deleteunpublished)
+
+//===============================================================================//
 
 module.exports = router
 
