@@ -119,7 +119,7 @@ const DELETEdata = async function (req, res) {
 const deleteunpublished = async function (req, res) {
     try {
         let datas = await blogModel.updateMany({ $and: [{ isDeleted: false }, req.query] }, { isDeleted: true, deletedAt: new Date(Date.now()) }, { new: true })
-        if (datas.modifiedCount == 0) return res.status(404).send({ status: false, message: "Blogs not found with unpublished" })
+        if (datas.modifiedCount == 0) return res.status(404).send({ status: false, message: "Blogs not found " })
 
         return res.status(200).send({ status: true, data: datas })
 
