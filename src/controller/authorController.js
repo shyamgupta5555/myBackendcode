@@ -44,7 +44,7 @@ let token= jwt.sign(
   {userId:user._id}
 ,"project1group11"
 )
-res.status(200).send({status:true,data:token})
+res.status(200).send({status:true,data:{token:token}})
 
 }catch (error) {
   return res.status(500).send({ status: false, msg: error.message });
