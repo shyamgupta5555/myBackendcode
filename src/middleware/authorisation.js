@@ -17,7 +17,6 @@ const authorisation =async function (req,res,next){
             next()
         } 
         else{
-    
         const qid = req.query
         const reqID=req.id
         let count=0
@@ -35,10 +34,6 @@ const authorisation =async function (req,res,next){
     }catch(err){
         return res.status(500).send({status:false,msg:err.message})
     }
-
-
-     
-   
 }
 
 module.exports.authorisation=authorisation
