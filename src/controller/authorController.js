@@ -1,6 +1,6 @@
 const authorModel = require("../models/authorModel");
 const { isValidEmail, isValidString, isValidPassword } = require("../validator/validator");
-
+const jwt=require("jsonwebtoken")
 //================================// createauther //=========================================
 const createauther = async function (req, res) {
   try {
@@ -31,6 +31,25 @@ const createauther = async function (req, res) {
     return res.status(500).send({ status: false, msg: error.message });
   }
 };
+  //======================//login//=====================================
+  const login= async function (req,res){
+try{
+  let email =req.body.email
+let password =req.body.password
+if (!isValidEmail(email)) return res.status(400).send({ status: false, msg: "invalid emailid" })
+let user =await authorModel.findOne({email:email,password:password})
+if(!user) return res.status(400).send({status:false,msg:"emailId and password is not found in auther database"})
 
+let token= jwt.sign(
+  {userId:user._id}
+,"project1group11"
+)
+res.status(200).send({status:true,data:token})
+
+}catch (error) {
+  return res.status(500).send({ status: false, msg: error.message });
+}
+  }
 //==================// module exports //==============================================
-module.exports = { createauther }
+
+module.exports = { createauther,login }

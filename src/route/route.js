@@ -18,6 +18,7 @@ router.delete('/blogs/:blogId', blogController.DELETEdata)
 
 router.delete('/blogs', blogController.deleteunpublished)
 
+router.post('/login', authorController.login)
 //===============================================================================//
 
 module.exports = router
