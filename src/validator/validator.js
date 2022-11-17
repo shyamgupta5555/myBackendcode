@@ -29,6 +29,14 @@ const isValidPassword = function (pw) {
   if (pass.test(pw)) return true;
 };
 
+
+
+const isValidName = function (name) {
+  if (/^[a-zA-Z ]+$/.test(name)) {
+    return true;
+  }
+};
+
 //=============================// module exports //==============================
 
-module.exports = { isValidEmail, idCharacterValid, isValidString, isValidPassword }
+module.exports = { isValidEmail, idCharacterValid, isValidString, isValidPassword ,isValidName}

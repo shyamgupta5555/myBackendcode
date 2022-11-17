@@ -13,8 +13,8 @@ const createauther = async function (req, res) {
     if (!title) return res.status(400).send({ status: false, msg: "title is requred" });
     if (!email) return res.status(400).send({ status: false, msg: "email is requred" });
     if (!password) return res.status(400).send({ status: false, msg: "password is requred" });
-    if(isValidName(!fname)) return res.status(400).send({ status: false, msg: "Number is not required in fname" });
-    if(isValidName(!lname)) return res.status(400).send({ status: false, msg: "Number is not required in lname" });
+    if(!isValidName(fname)) return res.status(400).send({ status: false, msg: "Number is not required in fname" });
+    if(!isValidName(lname)) return res.status(400).send({ status: false, msg: "Number is not required in lname" });
     if (!isValidString(fname)) return res.status(400).send({ status: false, msg: "Please provide valid fname" })
     if (!isValidString(lname)) return res.status(400).send({ status: false, msg: "Please provide valid lname" })
     if (!isValidPassword(password)) return res.status(400).send({ status: false, msg: "Please provide valid password" })
