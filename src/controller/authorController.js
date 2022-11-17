@@ -1,5 +1,5 @@
 const authorModel = require("../models/authorModel");
-const { isValidEmail, isValidString, isValidPassword } = require("../validator/validator");
+const { isValidEmail, isValidString, isValidPassword ,isValidName} = require("../validator/validator");
 const jwt=require("jsonwebtoken")
 //================================// createauther //=========================================
 const createauther = async function (req, res) {
@@ -7,12 +7,14 @@ const createauther = async function (req, res) {
     let data = req.body;
     const { fname, lname, title, email, password } = data;
     if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "request body is Empty" })
+
     if (!fname) return res.status(400).send({ status: false, msg: "fname is requred" });
     if (!lname) return res.status(400).send({ status: false, msg: "lname is requred" });
     if (!title) return res.status(400).send({ status: false, msg: "title is requred" });
     if (!email) return res.status(400).send({ status: false, msg: "email is requred" });
     if (!password) return res.status(400).send({ status: false, msg: "password is requred" });
-
+    if(isValidName(!fname)) return res.status(400).send({ status: false, msg: "Number is not required in fname" });
+    if(isValidName(!lname)) return res.status(400).send({ status: false, msg: "Number is not required in lname" });
     if (!isValidString(fname)) return res.status(400).send({ status: false, msg: "Please provide valid fname" })
     if (!isValidString(lname)) return res.status(400).send({ status: false, msg: "Please provide valid lname" })
     if (!isValidPassword(password)) return res.status(400).send({ status: false, msg: "Please provide valid password" })
@@ -41,15 +43,16 @@ let user =await authorModel.findOne({email:email,password:password})
 if(!user) return res.status(400).send({status:false,msg:"emailId and password is not found in auther database"})
 
 let token= jwt.sign(
-  {userId:user._id}
-,"project1group11"
+  {userId:user._id}  //peload
+,"project1group11" //privet key
 )
-res.status(200).send({status:true,data:{token:token}})
-
+res.setHeader("x-api-key",token)
+res.status(200).send({status:true,data:{token:token}})        
+    
 }catch (error) {
   return res.status(500).send({ status: false, msg: error.message });
 }
   }
 //==================// module exports //==============================================
 
-module.exports = { createauther,login }
+module.exports = { createauther,login }   
