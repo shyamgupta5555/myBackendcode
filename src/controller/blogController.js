@@ -10,19 +10,19 @@ const createBlog = async function (req, res) {
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "request body is Empty" })
         const { title, body, authorId, category } = data
 
-        if (!title) return res.status(400).send({ status: false, msg: "title is requred" });
-        if (!body) return res.status(400).send({ status: false, msg: "body is requred" });
-        if (!authorId) return res.status(400).send({ status: false, msg: "authorId is requred" });
-        if (!category) return res.status(400).send({ status: false, msg: "category is requred" });
+        if (!title) return res.status(404).send({ status: false, msg: "title is requred" });
+        if (!body) return res.status(404).send({ status: false, msg: "body is requred" });
+        if (!authorId) return res.status(404).send({ status: false, msg: "authorId is requred" });
+        if (!category) return res.status(404).send({ status: false, msg: "category is requred" });
 
-        if (!isValidString(title)) return res.status(400).send({ status: false, msg: "Please provide valid title" })
-        if (!isValidString(body)) return res.status(400).send({ status: false, msg: "Please provide valid body" })
-        if (!isValidString(category)) return res.status(400).send({ status: false, msg: "Please provide valid category" });
+        if (!isValidString(title)) return res.status(404).send({ status: false, msg: "Please provide valid title" })
+        if (!isValidString(body)) return res.status(404).send({ status: false, msg: "Please provide valid body" })
+        if (!isValidString(category)) return res.status(404).send({ status: false, msg: "Please provide valid category" });
 
-        if (!idCharacterValid(authorId)) return res.status(400).send({ status: false, msg: "Please provide the valid authorid" })
-        const authordata = await authorModel.find({ _id: data.authorId })
-        if (!authordata) return res.status(400).send({ status: false, msg: "author Id doesn't exist" })
-
+        if (!idCharacterValid(authorId)) return res.status(404).send({ status: false, msg: "Please provide the valid authorid" })
+        
+        if (authorId !== req.id) return res.status(401).send({ status: false, msg: "autherication failed " })
+        if(data.isPublished==true) data.publishedAt=new Date(Date.now())
         const savedData = await blogModel.create(data)
         return res.status(201).send({ status: true, data: savedData })
     } catch (error) {
@@ -63,14 +63,15 @@ const getData = async function (req, res) {
 const updateBlog = async function (req, res) {
     try {
         let blogId = req.params.blogId
-        if (!idCharacterValid(blogId)) return res.status(400).send({ status: false, msg: "please provide the valid blogId " })
+        if (!idCharacterValid(blogId)) return res.status(404).send({ status: false, msg: "please provide the valid blogId " })
         let isValidBlogId = await blogModel.findById(blogId)
         if (!isValidBlogId) {
-            return res.status(400).send({ status: false, msg: "this blog is not exist" })
+            return res.status(404).send({ status: false, msg: "this blog is not exist" })
         } else {
             let isDeleted = await blogModel.findOne({ _id: blogId, isDeleted: false })
-            if (!isDeleted) return res.status(400).send({ status: false, msg: "this blog is already deleted" })
+            if (!isDeleted) return res.status(404).send({ status: false, msg: "this blog is already deleted" })
 
+            if (Object.keys(req.body).length == 0) return res.status(404).send({ status: false, msg: "no data for update" })
             const { title, body, category, tags, subcategory } = req.body
             let time = new Date(Date.now())
             let updateBlog = await blogModel.findOneAndUpdate(
@@ -99,7 +100,7 @@ const updateBlog = async function (req, res) {
 const DELETEdata = async function (req, res) {
     try {
         let data = req.params.blogId
-        if (!idCharacterValid(data)) return res.status(400).send({ status: false, msg: "Please provide the valid blogid" })
+        if (!idCharacterValid(data)) return res.status(404).send({ status: false, msg: "Please provide the valid blogid" })
         let savedata = await blogModel.findById(data)
 
         if (!savedata) return res.status(404).send({ status: false, msg: "blogs not found" })
