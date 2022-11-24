@@ -1,5 +1,7 @@
 const collegeModel = require('../models/collegeModel');
 const internModel = require('../models/internModel');
+
+// =============== regex========================//
 const emailValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const mobileValidation = /^([+]\d{2})?\d{10}$/
 const nameregex = /^[a-zA-Z_ ]{1,30}$/
@@ -21,6 +23,8 @@ const createintern = async function (req, res) {
         if (!name.match(nameregex)) {
             return res.status(400).send({ status: false, message: "Please provide valid name" })
         };
+
+
         if (!email) {
             return res.status(400).send({ status: false, message: "Please provide email" })
         };
@@ -34,6 +38,8 @@ const createintern = async function (req, res) {
         if (duplicateemail) {
             return res.status(400).send({ status: false, message: "email already existed" });
         };
+
+
         if (!mobile) {
             return res.status(400).send({ status: false, message: "Please provide mobile" })
         };
@@ -47,6 +53,7 @@ const createintern = async function (req, res) {
         if (duplicateMobile) {
             return res.status(400).send({ status: false, message: "mobile number already existed" });
         };
+        
         if (!collegeName) {
             return res.status(400).send({ status: false, message: "Please provide collegeName" })
         };
