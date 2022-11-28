@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const objectId = mongoose.Schema.Types.ObjectId;
 
-const authorModel = new mongoose.Schema(
+const booksModel = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
 
@@ -15,13 +15,13 @@ const authorModel = new mongoose.Schema(
 
     subcategory: { type: String, required: true },
 
-    reviews: { type: Number, default: 0, comment },
+    reviews: { type: Number, default: 0 },
 
     deletedAt: Date,
 
     isDeleted: { type: Boolean, default: false },
 
-    releasedAt: { type: Date, require: true },
+    releasedAt: { type: Date, required: true },
   },
 
   { timestamps: true }
