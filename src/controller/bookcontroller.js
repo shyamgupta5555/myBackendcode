@@ -4,9 +4,9 @@ const userModel = require("../models/userModel")
 
 //----------------//validation//----------------------------------------------------------------------
 const objectId = mongoose.Types.ObjectId
-const isbnvalidation = /^([+]\d{2})?\d{10 ,13}$/
+const isbnvalidation =/^([+]\d{2})?\d{10,13}$/
 function isValide(value){
-    return (typeof value === "string" &&  value.trim().length > 0 && value.match(/^[\D]+$/))
+    return (typeof value === "string" &&  value.trim().length > 0 && value.match(/^[A-Za-z][A-Za-z ,._]{1,100}$/))
 }
 
 //---------------------------------//book creation //--------------------------------------------------------
@@ -14,7 +14,7 @@ const createbooks = async function (req, res) {
 
     try {
         const data = req.body
-        let { title, excerpt, userId, ISBN, category, subcategory, isDelete } = data
+        let { title, excerpt, userId, ISBN, category, subcategory, isDelete,releasedAt } = data
         if (Object.keys(req.body).length == 0) { res.status(404).send({ status: false, msg: "body is empty" }) }
 
         if (!title) { res.status(400).send({ status: false, msg: "please enter title" }) }
@@ -25,10 +25,10 @@ const createbooks = async function (req, res) {
         if (!subcategory) { res.status(400).send({ status: false, msg: "please enter subcategory" }) }
         if (!releasedAt) { res.status(400).send({ status: false, msg: "please enter releasedAT" }) }
 
-        if (isValide(title)) { return res.status(400).send({ status: false, msg: "please enter properly title" }) }
-        if (isValide(excerpt)) { return res.status(400).send({ status: false, msg: "please enter properly excerrpt" }) }
-        if (isValide(category)) { return res.status(400).send({ status: false, msg: "please enter properly category" }) }
-        if (isValide(subcategory)) { return res.status(400).send({ status: false, msg: "please enter subcategory" }) }
+        if (!isValide(title)) { return res.status(400).send({ status: false, msg: "please enter properly title" }) }
+        if (!isValide(excerpt)) { return res.status(400).send({ status: false, msg: "please enter properly excerrpt" }) }
+        if (!isValide(category)) { return res.status(400).send({ status: false, msg: "please enter properly category" }) }
+        if (!isValide(subcategory)) { return res.status(400).send({ status: false, msg: "please enter subcategory" }) }
         if (!objectId.isValid(userId)) { return res.status(400).send({ status: false, msg: "please enter valide userId" }) }
         if (!ISBN.match(isbnvalidation)) return res.status(400).send({ status: false, msg: "please enter valid ISBN" })
 

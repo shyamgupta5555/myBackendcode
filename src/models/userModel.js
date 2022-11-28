@@ -7,9 +7,9 @@ const userModel = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     address: {
-      street: String,
-      city: String,
-      pincode: String,
+      street:{type:String},
+      city: {type:String},
+      pincode:{type: String},
     },
   },
   { timestamps: true }
