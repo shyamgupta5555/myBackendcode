@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 
 
 
- export const  createUser = async function(req ,res){
+  const  createUser = async function(req ,res){
   try{
   let data = req.body
   let { titel ,name , phone , email ,address ,password} = data
@@ -46,7 +46,7 @@ res.status(201).send({status : flase , massege :createData})
 
 }
 catch (err){
-  res.status(500).send({status : false ,massege : err.massege })
+  res.status(500).send({status : false ,msg : err.massege })
 }
 }
 
@@ -55,7 +55,7 @@ catch (err){
 
 // ==================== LogIN aapi ===============//
 
-export const login = async function(req ,res){
+ const login = async function(req ,res){
   try{
   let data  = res.body
   let { email , password } = data
@@ -85,3 +85,6 @@ res.status(201).send({status :true , massege : 'success' , data : tokenCreate})
   res.status(500).send({status:false , massege :err.massege})
 }
 }
+
+module.exports.createUser=createUser
+module.exports.login=login
