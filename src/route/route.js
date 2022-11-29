@@ -10,6 +10,7 @@ router.post("/login",userController.login)
 router.post("/books",bookController.createbooks)
 router.get("/books",bookController.getbooks)
 router.get("/books/:bookId",bookController.getBybookid)
+router.put("/books/:bookId",bookController.updatebook)
 
 
 router.all('/*',function(req,res){
