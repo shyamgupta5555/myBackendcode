@@ -10,6 +10,8 @@ router.post("/login",userController.login)
 router.post("/books",bookController.createbooks)
 router.get("/books",bookController.getbooks)
 
+
+
 router.all('/*',function(req,res){
     return res.status(400).send({status:false, message:"pls provide valid path"})
 })

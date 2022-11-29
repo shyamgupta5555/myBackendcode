@@ -3,12 +3,14 @@ const userModel = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
 
-  const regex = /^[a-zA-Z ]{1,30}$/
   const emailValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-  const mobileValidation = /^([+]\d{2})?\d{10}$/
   const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/;
-
-
+  function isValide(value){
+    return (typeof value === "string" &&  value.trim().length > 0 && value.match(/^[A-Za-z ][A-Za-z ]{1,100}$/))
+}
+function isValideMobil(value){
+  return (typeof value === "string" &&  value.trim().length > 0 && value.match(/^[0-9]{1,30}$/))
+}
 
   const  createUser = async function(req ,res){
   try{
@@ -27,11 +29,12 @@ const jwt = require('jsonwebtoken')
 
 //  ================regex=====================//
 
-if(!name.match(regex))return res.status(400).send({status : false ,massege :"provild vaild name" })
-if(!phone.match(mobileValidation))return res.status(400).send({status : false ,massege :"provild vaild phone" })
+if(!isValide(name))return res.status(400).send({status : false ,massege :"provild vaild name" })
+if(!isValideMobil(phone))return res.status(400).send({status : false ,massege :"provild vaild phone" })
 if(!email.match(emailValidation))return res.status(400).send({status : false ,massege :"provild vaild email" })
 if(!password.match(passwordValidation))return res.status(400).send({status:false,msg:"provild vaild password"})
-
+let titleMatch = ["Mr", "Mrs", "Miss"]
+if(!titleMatch.includes(title))return res.status(400).send({status: false , message : "title shoud be like [Mr,Mrs,Miss]"})
 
 // ================ db call ================== //
 let emailfind = await userModel.findOne({email:email})
@@ -47,7 +50,7 @@ return res.status(201).send({status :true , massege :createData})
 
 }
 catch (err){
- return res.status(500).send({status : false ,msg : err.massege })
+ return res.status(500).send({status : false ,msg : err.message })
 }
 }
 
@@ -61,11 +64,11 @@ catch (err){
   let data  = req.body
   let { email , password } = data
   
-  if(Object.keys(req.body).length == 0)return res.status(400).send({status :flase , massege :"provied all details"})
+  if(Object.keys(req.body).length == 0)return res.status(400).send({status :flase , message :"provied all details"})
 
 
-  if(!email)return res.status(400).send({status: false , massege : "provied email"})
-  if(!password)return res.status(400).send({status: false , massege : "provied password"})
+  if(!email)return res.status(400).send({status: false , message : "provied email"})
+  if(!password)return res.status(400).send({status: false , message : "provied password"})
 
 
   // ================ db call ================== //
@@ -75,15 +78,15 @@ if(!userData) return res.status(404).send({status: false , msg : "provied please
 // =============================================//
 
 let tokenCreate = jwt.sign({
-   userId :userData._Id,
-   project :"poject-3" } 
-   ,"this is 3rd project form lithium batch", {expiresIn :12000}
+   userId :userData._id} 
+   ,"this is 3rd project form lithium batch", 
+   {expiresIn :"12h"}
    )
 
-return res.status(201).send({status :true , massege : 'success' , data : tokenCreate})
+return res.status(201).send({status :true , message : 'success' , data : tokenCreate})
 
 }catch (err) {
- return res.status(500).send({status:false , massege :err.massege})
+ return res.status(500).send({status:false , massege :err.message})
 }
 }
 
