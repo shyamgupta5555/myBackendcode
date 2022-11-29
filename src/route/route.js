@@ -11,6 +11,7 @@ router.post("/books",bookController.createbooks)
 router.get("/books",bookController.getbooks)
 router.get("/books/:bookId",bookController.getBybookid)
 router.put("/books/:bookId",bookController.updatebook)
+router.delete("/books/:bookId",bookController.deleteBookById)
 
 
 router.all('/*',function(req,res){

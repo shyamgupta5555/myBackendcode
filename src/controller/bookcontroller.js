@@ -276,7 +276,32 @@ const updatebook = async function (req, res) {
   }
 };
 
+
+const deleteBookById = async (req, res) => {
+    try {
+        let bookId = req.params.bookId;
+        //=====================Fetching the data of Book(not deleted) then Delete=====================//
+        let deleteByBookId = await booksModel.findOneAndUpdate({ _id: bookId, isDeleted: false },
+            { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
+
+        //====================Checking the Book Data is Present(Deleted) or Not======================//
+        if (!deleteByBookId) { return res.status(404).send({ status: false, message: "No Book Document Found! Book Deletion Unsuccessful" }) }
+
+        res.status(200).send({ status: true, message: `This Book: ${deleteByBookId.title} is Deleted Successfully` })
+
+    } catch (error) {
+
+        res.status(500).send({ status: 'error', error: error.message })
+    }
+}
+
+
+
+
+
 module.exports.getBybookid = getBybookid;
 module.exports.createbooks = createbooks;
 module.exports.getbooks = getbooks;
 module.exports.updatebook = updatebook;
+module.exports.deleteBookById =deleteBookById 
+
