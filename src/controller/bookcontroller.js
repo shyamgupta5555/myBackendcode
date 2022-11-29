@@ -70,6 +70,28 @@ const getbooks = async function (req, res) {
 
 }
 
+
+const getBybookid = async function (req, res) {
+    try {
+        const bookid = req.params.bookId
+
+        if (!objectId.isValid(bookid)) { return res.status(400).send({ status: false, msg: "please enter valide bookid" }) }
+        let data = await booksModel.findById(bookid).lean()
+        if (!data) return res.status(404).send({ status: false, msg: "book is not exists " })
+
+        const reviews = []//await reviwesModel.find({ bookId: bookid })
+        data.reviewsdata=reviews
+      
+        if (reviews.length==0) return res.status(200).send({ status: true, msg: "#book-details-response-no-reviews", data: data })
+
+        return res.status(200).send({ status: true, msg: "#successful-response-structure", data:data })
+    } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
+
+}
+
+
+
+module.exports.getBybookid=getBybookid
 module.exports.createbooks = createbooks
 module.exports.getbooks = getbooks
 
