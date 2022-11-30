@@ -11,8 +11,9 @@ const jwt = require('jsonwebtoken')
 function isValideMobil(value){
   return (typeof value === "string" &&  value.trim().length > 0 && value.match(/^[0-9]{1,30}$/))
 }
+// ======================= api 1========================//
 
-  const  createUser = async function(req ,res){
+  const  createUser = async (req ,res)=>{
   try{
   let data = req.body
   let { title ,name , phone , email ,address ,password,address:{street,city,picode}} = data
@@ -45,12 +46,11 @@ if(mobilefind )return res.status(400).send({status: false , massege : "mobile nu
 // ======================= //
 
 let createData = await userModel.create(data)
-console.log(createData)
 return res.status(201).send({status :true , massege :createData})
 
 }
 catch (err){
- return res.status(500).send({status : false ,msg : err.message })
+ return res.status(500).send({status : false ,message : err.message })
 }
 }
 
@@ -59,7 +59,7 @@ catch (err){
 
 // ==================== LogIN aapi ===============//
 
- const login = async function(req ,res){
+ const login = async (req ,res)=>{
   try{
   let data  = req.body
   let { email , password } = data
@@ -73,14 +73,14 @@ catch (err){
 
   // ================ db call ================== //
 let userData = await userModel.findOne({email : email ,password :password})
-if(!userData) return res.status(404).send({status: false , msg : "provied please vaild  email and password"})
+if(!userData) return res.status(404).send({status: false , message : "provied please vaild  email and password"})
 
 // =============================================//
 
 let tokenCreate = jwt.sign({
    userId :userData._id} 
    ,"this is 3rd project form lithium batch", 
-   {expiresIn :"12h"}
+   {expiresIn :'20000'}
    )
 
 return res.status(201).send({status :true , message : 'success' , data : tokenCreate})
