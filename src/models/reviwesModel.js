@@ -15,11 +15,13 @@ const reviewSchema = new mongoose.Schema({
   },
   reviewedAt: {
     type: String,
-    required:true
+    required:true,
+    trim :true
   },
   rating: {
     type: Number,
-    required: true
+    required: true,
+    trim :true
   },
   review: {
     type: String
