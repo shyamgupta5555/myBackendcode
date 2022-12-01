@@ -96,7 +96,7 @@ const getBybookid = async (req, res) => {
         let data = await booksModel.findOne({_id:bookid ,isDeleted:false}).lean();
         if (!data) return res.status(404).send({ status: false, msg: "book is not exists " });
 
-        const reviews = []; //await reviwesModel.find({ bookId: bookid })
+        const reviews = await reviwesModel.find({ bookId: bookid,isDeleted: false })
         data.reviewsdata = reviews;
         if (reviews.length == 0) return res.status(200).send({
             status: true,

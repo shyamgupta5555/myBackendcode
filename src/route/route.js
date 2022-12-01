@@ -23,6 +23,7 @@ router.post("/books/:bookId/review",reviwesController.createReview)
 router.put("/books/:bookId/review/:reviewId" ,reviwesController.updateReview)
 router.delete("/books/:bookId/review/:reviewId" ,reviwesController.deleterive)
 
+
 router.all('/*',function(req,res){
     return res.status(400).send({status:false, message:"pls provide valid path"})
 })

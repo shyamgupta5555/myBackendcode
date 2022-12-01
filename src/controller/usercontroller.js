@@ -80,7 +80,7 @@ if(!userData) return res.status(404).send({status: false , message : "provied pl
 let tokenCreate = jwt.sign({
    userId :userData._id} 
    ,"this is 3rd project form lithium batch", 
-   {expiresIn :'20000'}
+   {expiresIn :'1h'}
    )
 
 return res.status(201).send({status :true , message : 'success' , data : tokenCreate})
