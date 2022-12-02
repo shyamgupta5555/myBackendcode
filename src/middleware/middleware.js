@@ -38,7 +38,7 @@ exports.authorization = async (req, res, next) => {
       const bookdata = await booksModel.findOne({ _id: bookid, isDeleted: false });
       if (!bookdata)return res.status(404).send({ status: false, message: "book id is not found" });
       
-      if (id !== bookdata.userId) return res.status(403).send({ status: false, message: "unathraization" })
+      if (id !== bookdata.userId.toString()) return res.status(403).send({ status: false, message: "unathraization" })
       next()
     }
 
