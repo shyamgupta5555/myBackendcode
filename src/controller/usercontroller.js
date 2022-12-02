@@ -41,9 +41,9 @@ if(!titleMatch.includes(title))return res.status(400).send({status: false , mess
 // ================ db call ================== //
 
 let emailfind = await userModel.findOne({email:email})
-if(emailfind) return res.status(400).send({status: false , massege : "email id already exits"})
+if(emailfind) return res.status(409).send({status: false , massege : "email id already exits"})
 let mobilefind = await userModel.findOne({phone:phone})
-if(mobilefind )return res.status(400).send({status: false , massege : "mobile number already exits"})
+if(mobilefind )return res.status(409).send({status: false , massege : "mobile number already exits"})
 
 
 // ======================= //
@@ -83,7 +83,7 @@ if(!userData) return res.status(404).send({status: false , message : "provied pl
 let tokenCreate = jwt.sign({
    userId :userData._id} 
    ,"this is 3rd project form lithium batch", 
-   {expiresIn :'5h'}
+   {expiresIn :'10000'}
    )
 
 return res.status(201).send({status :true , message : 'success' , data : tokenCreate})

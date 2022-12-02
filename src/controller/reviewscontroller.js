@@ -29,7 +29,7 @@ exports.createReview = async (req, res) => {
 
 
     let findBook = await bookModel.findOne({ _id: bookid, isDeleted: false })
-    if (!findBook) return res.status(400).send({ status: false, message: "book not exits mongodb" })
+    if (!findBook) return res.status(404).send({ status: false, message: "book not exits mongodb" })
 
     // ============= regex match ======================//
 
@@ -44,9 +44,10 @@ exports.createReview = async (req, res) => {
       rating: rating,
       review: data.review
     }
-
-    if (!isValide(data["reviewer's name"])) { newObject.reviewedBy = "Guest"}
-    else { newObject.reviewedBy = data["reviewer's name"] }
+   
+   if(data["reviewer's name"])
+   { if (!isValide(data["reviewer's name"])) { newObject.reviewedBy = "Guest"}
+    else { newObject.reviewedBy = data["reviewer's name"] }}
 
 
     let createReview = await reviwesModel.create(newObject)
@@ -130,6 +131,10 @@ exports.deleterive = async function (req, res) {
     return res.status(500).send({ status: false, message: err.message })
   }
 }
+
+
+
+
 
 
 

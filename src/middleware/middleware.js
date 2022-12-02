@@ -11,7 +11,7 @@ exports.authentication = async (req, res, next) => {
     if (!headersValue) return res.status(400).send({ status: false, message: "provied  token value" })
 
     jwt.verify(headersValue, "this is 3rd project form lithium batch", (err, decoeded) => {
-         if (err) return res.status(400).send({ status: false, message: err.message })
+         if (err) return res.status(401).send({ status: false, message: err.message })
           req.id = decoeded.userId
             next() 
     }

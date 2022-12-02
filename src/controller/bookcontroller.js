@@ -18,7 +18,7 @@ exports.createbooks = async (req, res) => {
         const data = req.body;
         const { title, excerpt, userId, ISBN, category, subcategory, isDeleted, releasedAt } = data;
         if (Object.keys(req.body).length == 0) {
-            res.status(404).send({ status: false, msg: "body is empty" })
+            res.status(404).send({ status: false, message: "body is empty" })
         }
 
         // ==============mandatory  validation=============================//
@@ -45,10 +45,10 @@ exports.createbooks = async (req, res) => {
         if (isDeleted == true) { data.deletedAt = new Date() }
 
         const gettitele = await booksModel.findOne({ title: title });
-        if (gettitele) return res.status(400).send({ status: false, message: "title is allready exsist" });
+        if (gettitele) return res.status(409).send({ status: false, message: "title is allready exsist" });
 
         const ISBNfind = await booksModel.findOne({ ISBN: ISBN });
-        if (ISBNfind) return res.status(400).send({ status: false, message: "ISBN is allready exsist" });
+        if (ISBNfind) return res.status(409).send({ status: false, message: "ISBN is allready exsist" });
 
         const userid = await userModel.findOne({ _id: userId, isDelete: false });
         if (!userid) return res.status(404).send({ status: false, message: "userId is not exsist" });
@@ -65,7 +65,7 @@ exports.createbooks = async (req, res) => {
 
 
 
-//---------------------------------//getbooks//-----------------------------//
+//---------------------------------//getbooks api //-----------------------------//
 
 exports.getbooks = async (req, res) => {
     try {
@@ -77,7 +77,7 @@ exports.getbooks = async (req, res) => {
         if (data.length == 0) return res.status(404).send({ status: false, message: "data is not found" });
         return res.status(200).send({ status: true, data: data });
     } catch (err) {
-        return res.status(500).send({ status: false, msg: err.message });
+        return res.status(500).send({ status: false, message: err.message });
     }
 };
 
@@ -87,22 +87,19 @@ exports.getBybookid = async (req, res) => {
     try {
         const bookid = req.params.bookId;
 
-        if (!objectId.isValid(bookid)) {
-            return res.status(400).send({ status: false, msg: "please enter valide bookid" })
-        }
+        if (!objectId.isValid(bookid)) return res.status(400).send({ status: false, message: "please enter valide bookid" })
 
         let data = await booksModel.findOne({ _id: bookid, isDeleted: false }).lean();
-        if (!data) return res.status(404).send({ status: false, msg: "book is not exists " });
+        if (!data) return res.status(404).send({ status: false, message: "book is not exists " });
 
         const reviews = await reviwesModel.find({ bookId: bookid, isDeleted: false })
         data.reviewsdata = reviews;
+        if (reviews.length == 0) return res.status(200).send({ status: true, message: "#book-details-response-no-reviews", data: data });
 
-        if (reviews.length == 0) return res.status(200).send({ status: true, msg: "#book-details-response-no-reviews", data: data, });
-
-        return res.status(200).send({ status: true, msg: "#successful-response-structure", data: data });
+        return res.status(200).send({ status: true, message: "#successful-response", data: data });
 
     } catch (err) {
-        return res.status(500).send({ status: false, msg: err.message });
+        return res.status(500).send({ status: false, message: err.message });
     }
 };
 
@@ -112,38 +109,37 @@ exports.getBybookid = async (req, res) => {
 exports.updatebook = async (req, res) => {
     try {
         const input = req.params.bookId;
-         const data = req.body;
+        const data = req.body;
         const { title, excerpt, ISBN, releasedAt } = data
 
         if (Object.keys(req.body).length == 0)
-            return res.status(404).send({ status: false, msg: "body is empty" })
+            return res.status(404).send({ status: false, message: "body is empty" })
         if (ISBN) {
             if (!ISBN.match(isbnValidation))
-                return res.status(400).send({ status: false, msg: "please enter valid ISBN number" });
+                return res.status(400).send({ status: false, message: "please enter valid ISBN number" });
         }
 
         if (title) {
             if (!isValide(title)) {
-                return res.status(400).send({ status: false, msg: "please enter properly title" });
+                return res.status(400).send({ status: false, message: "please enter properly title" });
             }
         }
-
         if (excerpt) {
             if (!isValide(excerpt)) {
-                return res.status(400).send({ status: false, msg: "please enter properly excerrpt" })
+                return res.status(400).send({ status: false, message: "please enter properly excerrpt" })
             }
         }
 
         if (releasedAt) {
             if (!releasedAt.match(dateVliadtion))
-                return res.status(400).send({ status: false, msg: "the formate of releasedAt should be like YYYY-MM-DD" });
+                return res.status(400).send({ status: false, message: "the formate of releasedAt should be like YYYY-MM-DD" });
         }
 
         const findtitle = await booksModel.findOne({ title: title, isDeleted: false });
-        if (findtitle) return res.status(404).send({ status: false, message: "titel is allready exsist" });
+        if (findtitle) return res.status(409).send({ status: false, message: "titel is allready exsist" });
 
         const ISBNfind = await booksModel.findOne({ ISBN: ISBN, isDeleted: false });
-        if (ISBNfind) return res.status(400).send({ status: false, message: "ISBN is allready exsist" });
+        if (ISBNfind) return res.status(409).send({ status: false, message: "ISBN is allready exsist" });
 
         const change = {
             title: title,
@@ -157,7 +153,7 @@ exports.updatebook = async (req, res) => {
         return res.status(200).send({ status: true, message: "the update is sucessfully done", data: newdata, });
 
     } catch (err) {
-        return res.status(500).send({ status: false, msg: err.message });
+        return res.status(500).send({ status: false, message: err.message });
     }
 };
 
