@@ -9,9 +9,11 @@ function isValide(value) {
 }
 const reviewAtVliadtion = /^((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/
 
+
+
 // ===================== createreview ==================//
 
-const createReview = async (req, res) => {
+exports.createReview = async (req, res) => {
   try {
     let bookid = req.params.bookId
     let data = req.body
@@ -38,8 +40,8 @@ const createReview = async (req, res) => {
     let newObject = {
       bookId: bookid,
       reviewedBy: data["reviewer's name"],
-      reviewedAt: data.reviewedAt,
-      rating: data.rating,
+      reviewedAt: reviewedAt,
+      rating: rating,
       review: data.review
     }
 
@@ -51,7 +53,7 @@ const createReview = async (req, res) => {
     findBook.reviews = findBook.reviews + 1
     await findBook.save()
 
-    res.status(201).send({ status: true, data: findBook })
+    res.status(201).send({ status: true, data: createReview})
 
   } catch (err) {
     res.status(500).send({ status: false, message: err.message })
@@ -61,7 +63,7 @@ const createReview = async (req, res) => {
 
 // ======================== update api ==========================//
 
-const updateReview = async function (req, res) {
+exports.updateReview = async function (req, res) {
   try {
     const bookid = req.params.bookId
 
@@ -82,8 +84,10 @@ const updateReview = async function (req, res) {
     const { review, rating } = data
     const bookdata = await bookModel.findOne({ _id: bookid, isDeleted: false })
     if (!bookdata) return res.status(400).send({ status: false, msg: "book is not exist" })
+
     const reviewdata = await reviwesModel.findOne({ _id: reviewid, isDeleted: false })
     if (!reviewdata) return res.status(400).send({ status: false, msg: "this is not found reviewes data" })
+
     if (rating) { if (!(rating >= 1 && rating <= 5)) return res.status(400).send({ status: false, message: "reating should be 1 to 5" }) }
 
     const change = {
@@ -93,6 +97,7 @@ const updateReview = async function (req, res) {
 
     if (!isValide(data["reviewer's name"])) { change.reviewedBy = reviewdata.reviewedBy }
     else { change.reviewedBy = data["reviewer's name"] }
+
     const reviewupdate = await reviwesModel.findByIdAndUpdate(reviewid, { $set: change }, { new: true })
     return res.status(200).send({ status: true, message: "the updqate is sucessfulley done", data: reviewupdate })
   } catch (err) {
@@ -103,7 +108,7 @@ const updateReview = async function (req, res) {
 // ========================= delet api ======================//
 
 
-const deleterive = async function (req, res) {
+exports.deleterive = async function (req, res) {
 
   try {
     const bookid = req.params.bookId
@@ -120,7 +125,7 @@ const deleterive = async function (req, res) {
     getbooks.reviews = getbooks.reviews - 1
     await getbooks.save()
 
-    return res.status(200).send({ status: true, message: "review is successfully is deleted" })
+    return res.status(200).send({ status: true, message: `This review :${datareviews.reviewedBy} is successfully  deleted`})                   
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message })
   }
@@ -128,7 +133,3 @@ const deleterive = async function (req, res) {
 
 
 
-
-module.exports.deleterive = deleterive
-module.exports.updateReview = updateReview
-module.exports.createReview = createReview

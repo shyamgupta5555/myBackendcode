@@ -5,7 +5,7 @@ const userModel = require('../models/userModel')
 
 
 
-const authentication = async (req, res, next) => {
+exports.authentication = async (req, res, next) => {
   try {
     let headersValue = req.headers['x-api-key']
     if (!headersValue) return res.status(400).send({ status: false, message: "provied  token value" })
@@ -25,20 +25,20 @@ const authentication = async (req, res, next) => {
 
 
 
-const authorization = async (req, res, next) => {
+exports.authorization = async (req, res, next) => {
   try {
     const bookid = req.params.bookId
     const id = req.id
     const userid = req.body.userId
 
-
-
     if (bookid) {
       if (!mongoose.Types.ObjectId.isValid(bookid))
         return res.status(400).send({ status: false, msg: "please enter valide bookId" })
-      let bookData = await booksModel.findById(bookid)
-      if (!bookData) return res.status(400).send({ status: false, message: " book id worng please send correct id" })
-      if (!id == bookData.userId) return res.status(403).send({ status: false, message: "unathraization" })
+      
+      const bookdata = await booksModel.findOne({ _id: bookid, isDeleted: false });
+      if (!bookdata)return res.status(404).send({ status: false, message: "book id is not found" });
+      
+      if (id !== bookdata.userId) return res.status(403).send({ status: false, message: "unathraization" })
       next()
     }
 
@@ -47,7 +47,7 @@ const authorization = async (req, res, next) => {
       if (!mongoose.Types.ObjectId.isValid(userid))
         return res.status(400).send({ status: false, msg: "please enter valide userid" })
 
-      if (!id == userid) return res.status(403).send({ status: false, message: "unathraization user id not vaild" })
+      if (id !== userid) return res.status(403).send({ status: false, message: "unathraization user id not vaild" })
       next()
     }
 
@@ -57,5 +57,3 @@ const authorization = async (req, res, next) => {
 
 }
 
-module.exports.authorization = authorization
-module.exports.authentication = authentication
