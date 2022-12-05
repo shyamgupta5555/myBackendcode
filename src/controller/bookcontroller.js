@@ -12,6 +12,8 @@ function isValide(value) {
 }
 
 
+
+
 //---------------------------------//book creation //--------------------------------------------------------
 exports.createbooks = async (req, res) => {
     try {
@@ -72,7 +74,8 @@ exports.getbooks = async (req, res) => {
         const input = req.query;
         input.isDelete = false;
 
-        const data = await booksModel.find(input).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1, }).sort({ title: 1 });
+        const data = await booksModel.find(input).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1, }).sort({ title:1});
+        
 
         if (data.length == 0) return res.status(404).send({ status: false, message: "data is not found" });
         return res.status(200).send({ status: true, data: data });
@@ -156,6 +159,7 @@ exports.updatebook = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message });
     }
 };
+
 
 // ====================== delet api=========================//
 exports.deleteBookById = async (req, res) => {

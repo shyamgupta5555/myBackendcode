@@ -5,6 +5,7 @@ const userModel = require('../models/userModel')
 
 
 
+
 exports.authentication = async (req, res, next) => {
   try {
     let headersValue = req.headers['x-api-key']
@@ -30,7 +31,7 @@ exports.authorization = async (req, res, next) => {
     const bookid = req.params.bookId
     const id = req.id
     const userid = req.body.userId
-
+   
     if (bookid) {
       if (!mongoose.Types.ObjectId.isValid(bookid))
         return res.status(400).send({ status: false, msg: "please enter valide bookId" })
@@ -43,7 +44,8 @@ exports.authorization = async (req, res, next) => {
     }
 
 
-    if (userid) {
+     else{
+      if(!userid)return res.status(400).send({status: false ,msg :"provied user id"})
       if (!mongoose.Types.ObjectId.isValid(userid))
         return res.status(400).send({ status: false, msg: "please enter valide userid" })
 
@@ -54,6 +56,4 @@ exports.authorization = async (req, res, next) => {
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message })
   }
-
 }
-

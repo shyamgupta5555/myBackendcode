@@ -74,16 +74,18 @@ exports.login = async (req ,res)=>{
   if(!password)return res.status(400).send({status: false , message : "provied password"})
 
 
-  // ================ db call ================== //
+ // ================ db call ================== //
+
 let userData = await userModel.findOne({email : email ,password :password})
 if(!userData) return res.status(404).send({status: false , message : "provied please vaild  email and password"})
+
 
 // =============================================//
 
 let tokenCreate = jwt.sign({
    userId :userData._id} 
    ,"this is 3rd project form lithium batch", 
-   {expiresIn :'10000'}
+   {expiresIn :'20min'}
    )
 
 return res.status(201).send({status :true , message : 'success' , data : tokenCreate})

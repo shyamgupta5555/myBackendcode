@@ -1,13 +1,15 @@
 const mongoose = require('mongoose')
 const reviwesModel = require('../models/reviwesModel')
-const bookModel = require('../models/booksModel')
+const bookModel = require('../models/booksModel');
+const userModel = require('../models/userModel');
 const objectId = mongoose.Types.ObjectId;
+
 
 // ============= regex===================//
 function isValide(value) {
   return (typeof value === "string" && value.trim().length > 0 && value.match(/^[A-Za-z ][A-Za-z _]{1,100}$/));
 }
-const reviewAtVliadtion = /^((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/
+// const reviewAtVliadtion = /^((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/
 
 
 
@@ -22,7 +24,6 @@ exports.createReview = async (req, res) => {
 
 
     if (!rating) return res.status(400).send({ status: false, message: "provied a rating" })
-    if (!reviewedAt) return res.status(400).send({ status: false, message: " provied a reviewedAt " })
 
     
     if (Object.keys(data) == 0) return res.status(400).send({ status: false, message: "body is empty" })
@@ -34,27 +35,29 @@ exports.createReview = async (req, res) => {
     // ============= regex match ======================//
 
     if (data.rating) { if (!(rating >= 1 && rating <= 5)) return res.status(400).send({ status: false, message: "reating should be 1 to 5" }) }
-    if (!reviewedAt.match(reviewAtVliadtion)) return res.status(400).send({ status: false, message: "not vaild reviewAt YYYY-MM-DD" })
+
+    
 
     // =========== new object==========================//
     let newObject = {
       bookId: bookid,
       reviewedBy: data["reviewer's name"],
-      reviewedAt: reviewedAt,
+      reviewedAt: new Date().toLocaleDateString(),
       rating: rating,
       review: data.review
     }
-   
+  
    if(data["reviewer's name"])
    { if (!isValide(data["reviewer's name"])) { newObject.reviewedBy = "Guest"}
     else { newObject.reviewedBy = data["reviewer's name"] }}
 
 
     let createReview = await reviwesModel.create(newObject)
-    findBook.reviews = findBook.reviews + 1
-    await findBook.save()
+    
+    let findBook2 = await bookModel.findByIdAndUpdate( bookid,{$inc:{review:1}},{New:true}).lean()
+    findBook2.revewsdata= [createReview]
 
-    res.status(201).send({ status: true, data: createReview})
+    res.status(201).send({ status: true, data: findBook2})
 
   } catch (err) {
     res.status(500).send({ status: false, message: err.message })
@@ -106,6 +109,7 @@ exports.updateReview = async function (req, res) {
   }
 }
 
+
 // ========================= delet api ======================//
 
 
@@ -123,17 +127,14 @@ exports.deleterive = async function (req, res) {
     const datareviews = await reviwesModel.findOneAndUpdate({ _id: reviewsid, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
     if (!datareviews) return res.status(404).send({ status: false, msg: "this reviews id not exists" })
 
-    getbooks.reviews = getbooks.reviews - 1
-    await getbooks.save()
+    let findBook2 = await bookModel.findByIdAndUpdate( bookid,{$inc:{review:-1}},{New:true}).lean()
+    findBook2.revewsdata=[datareviews]
 
-    return res.status(200).send({ status: true, message: `This review :${datareviews.reviewedBy} is successfully  deleted`})                   
+    return res.status(200).send({ status: true, message: `This review :${datareviews.reviewedBy} is successfully  deleted`,data:findBook2})                   
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message })
   }
 }
-
-
-
 
 
 

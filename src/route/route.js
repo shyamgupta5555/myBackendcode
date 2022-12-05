@@ -9,8 +9,11 @@ const middleware = require("../middleware/middleware")
 
 // ===============user api================//
 
+
 router.post("/register",userController.createUser)
 router.post("/login",userController.login)
+
+
 // ============ book api =====================//
 router.post("/books",middleware.authentication,middleware.authorization,bookController.createbooks)
 router.get("/books",middleware.authentication,bookController.getbooks)
@@ -22,6 +25,7 @@ router.delete("/books/:bookId",middleware.authentication,middleware.authorizatio
 router.post("/books/:bookId/review",reviwesController.createReview)
 router.put("/books/:bookId/review/:reviewId" ,reviwesController.updateReview)
 router.delete("/books/:bookId/review/:reviewId" ,reviwesController.deleterive)
+
 
 
 router.all('/*',function(req,res){
