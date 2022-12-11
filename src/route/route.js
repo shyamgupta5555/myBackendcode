@@ -3,27 +3,27 @@ const express = require('express')
 const router = express.Router()
 const blogController = require("../controller/blogController")
 const authorController = require("../controller/authorController")
-const {Authentication} = require("../middleware/authentication")
-const {authorisation} = require('../middleware/authorisation')
+const middleware = require("../middleware/auth")
+
 
 //=========================// PHASE -1 //===================================
 
-router.post('/blogs',Authentication, blogController.createBlog)
+router.post('/blogs',middleware.Authentication,middleware.authorisation, blogController.createBlog)
 
 router.post('/authors', authorController.createauther)
 
-router.get('/blogs',Authentication, blogController.getData)
+router.get('/blogs',middleware.Authentication, blogController.getData)
 
-router.put("/blogs/:blogId",Authentication,authorisation, blogController.updateBlog)
+router.put("/blogs/:blogId",middleware.Authentication,middleware.authorisation, blogController.updateBlog)
 
-router.delete('/blogs/:blogId',Authentication,authorisation, blogController.DELETEdata)
+router.delete('/blog/:blogId',middleware.Authentication,middleware.authorisation, blogController.DELETEdata)
 
-router.delete('/blogs',Authentication,authorisation, blogController.deleteunpublished)
+router.delete('/blogs', blogController.deleteByQuery)
 
 router.post('/login', authorController.login) 
 
 
-//                     <===========> error handling route <=================>
+//     <===========> error handling route <=================>
 
 
 router.all("/*",function(req,res){

@@ -13,8 +13,11 @@ Repository for backend cohort - Lithium
 ```
 - Blogs Model
 ```
+
 { title: {mandatory}, body: {mandatory}, authorId: {mandatory, refs to author model}, tags: {array of string}, category: {string, mandatory}, subcategory: {array of string, examples[technology-[web development, mobile development, AI, ML etc]] }, createdAt, updatedAt, deletedAt: {when the document is deleted}, isDeleted: {boolean, default: false}, publishedAt: {when the blog is published}, isPublished: {boolean, default: false}}
+
 ```
+
 
 ### Author APIs /authors
 - Create an author - atleast 5 authors
@@ -41,6 +44,7 @@ Repository for backend cohort - Lithium
 example of a query url: blogs?filtername=filtervalue&f2=fv2
 
 ### PUT /blogs/:blogId
+
 - Updates a blog by changing the its title, body, adding tags, adding a subcategory. (Assuming tag and subcategory received in body is need to be added)
 - Updates a blog by changing its publish status i.e. adds publishedAt date and set published to true
 - Check if the blogId exists (must have isDeleted false). If it doesn't, return an HTTP status 404 with a response body like [this](#error-response-structure)
@@ -48,10 +52,12 @@ example of a query url: blogs?filtername=filtervalue&f2=fv2
 - Also make sure in the response you return the updated blog document. 
 
 ### DELETE /blogs/:blogId
+
 - Check if the blogId exists( and is not deleted). If it does, mark it deleted and return an HTTP status 200 without any response body.
 - If the blog document doesn't exist then return an HTTP status of 404 with a body like [this](#error-response-structure) 
 
 ### DELETE /blogs?queryParams
+
 - Delete blog documents by category, authorid, tag name, subcategory name, unpublished
 - If the blog document doesn't exist then return an HTTP status of 404 with a body like [this](#error-response-structure)
 
@@ -60,6 +66,7 @@ example of a query url: blogs?filtername=filtervalue&f2=fv2
 - Add authentication and authroisation feature
 
 ### POST /login
+
 - Allow an author to login with their email and password. On a successful login attempt return a JWT token contatining the authorId in response body like [this](#Successful-login-Response-structure)
 - If the credentials are incorrect return a suitable error message with a valid HTTP status code
 
